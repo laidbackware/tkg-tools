@@ -44,3 +44,16 @@ Now generate a checksum and record the output for use on the import process.
 md5sum vmware-images.tar.gz
 # e.g output af503ac4e5453c1f841b11e278fba85f  vmware-images.tar.gz
 ```
+
+## Transfer images, validate and decompress
+Validate checksum matches the source file
+```
+md5sum vmware-images.tar.gz
+```
+Extract the images.
+```
+export IMAGE_LOCATION=/tanzu
+tar xvfz vmware-images.tar.gz -C $IMAGE_LOCATION
+```
+
+## Run the import script to import all images and bundles
