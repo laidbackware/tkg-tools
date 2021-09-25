@@ -23,21 +23,19 @@ export DEFINED_TKRS="v1.21.2_vmware.1-tkg.1"
 
 ## Run generate script
 ```
-./gen-download-script.sh > download-images-initial.sh
+./gen-download-script.sh > image-list
 # Filter out all duplicates and comments
-cat download-images-initial.sh |grep -v "#" |sort -r |uniq > download-images-unique.sh
-
 ```
 ## Run script
 If the script errors at any point, open the `download-images-unique.sh` script and comment out any completed lines. </br>
 The images are collected alphabetically, followed by the bundles.
 ```
-bash ./download-images-unique.sh
+./download-images.sh
 ```
 
 ## Compress and validate the exported images to a single file
 ```
-tar cvfz vmware-images.tar.gz $IMAGE_OUTPUT_DIR
+tar -C $IMAGE_OUTPUT_DIR -cf vmware-images.tar .
 ```
 Now generate a checksum and record the output for use on the import process.
 ```
@@ -52,8 +50,9 @@ md5sum vmware-images.tar.gz
 ```
 Extract the images.
 ```
-export IMAGE_LOCATION=/tanzu
-tar xvfz vmware-images.tar.gz -C $IMAGE_LOCATION
+export IMAGE_LOCATION=/tanzu/vmware-images
+tar xvf vmware-images.tar.gz -C $IMAGE_LOCATION
 ```
 
 ## Run the import script to import all images and bundles
+Ensure IMAGE_LOCATION and TKG_CUSTOM_IMAGE_REPOSITORY is exported.</br>

@@ -1,16 +1,16 @@
 #!/bin/bash
 # Copyright 2021 VMware, Inc. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-# Original script from https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-airgapped-environments.html
+# Original script from https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-mgmt-clusters-airgapped-environments.html#step-2-generate-the-publishimages-script-6
 
 set -euo pipefail
 
 TANZU_BOM_DIR=${HOME}/.config/tanzu/tkg/bom
 INSTALL_INSTRUCTIONS='See https://github.com/mikefarah/yq#install for installation instructions'
-TKG_CUSTOM_IMAGE_REPOSITORY=${TKG_CUSTOM_IMAGE_REPOSITORY:-''}
 TKG_IMAGE_REPO=${TKG_IMAGE_REPO:-''}
 
 #CHANGES!! add passing in of dir to host images
+TKG_CUSTOM_IMAGE_REPOSITORY=harbor.fqdn/harbor-project # Hard to fix the file name. Assuming the target is unknown.
 IMAGE_OUTPUT_DIR=${IMAGE_OUTPUT_DIR:-} 
 if [ -z "$IMAGE_OUTPUT_DIR" ]; then
   echo "IMAGE_OUTPUT_DIR variable is required but is not defined" >&2
@@ -59,7 +59,7 @@ function imgpkg_copy() {
         ;;
     esac
     # Replace all slashes in images names to underscores
-    dst=${3//\//_} 
+    dst=${3//\//]} 
     # tar images instead of copying to registry
     echo -e "\nimgpkg copy $flags $src --to-tar $output_dir/$dst.tar" 
     #|CHANGES
@@ -99,7 +99,7 @@ for imageTag in ${list}; do
       fi
       eval $get_comp_images | while read -r image; do
           actualImage=${actualImageRepository}/${image}
-          image2=$(echo "$image" | cut -f1 -d":")
+          image2=${image/":"/"~"} #CHANGED!! switch : for ! to allow files to be saved on Windows
           customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/${image2}
           imgpkg_copy $flags $actualImage $customImage
         done
@@ -139,7 +139,7 @@ for imageTag in ${list}; do
     fi
     eval $get_comp_images | while read -r image; do
         actualImage=${actualImageRepository}/${image}
-        image2=$(echo "$image" | cut -f1 -d":")
+        image2=${image/":"/"~"} #CHANGED!! switch : for ! to allow files to be saved on Windows
         customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/${image2}
         imgpkg_copy $flags $actualImage $customImage
       done
@@ -156,7 +156,7 @@ for imageTag in ${list}; do
   if [[ ${imageTag} == v* ]]; then
     echodual "Processing TKR compatibility image"
     actualImage=${actualImageRepository}/tkr-compatibility:${imageTag}
-    customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/tkr-compatibility
+    customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/tkr-compatibility~${imageTag} #CHANGED!! Add tag to filename
     imgpkg_copy "-i" $actualImage $customImage
     echo ""
     echodual "Finished processing TKR compatibility image"
@@ -168,7 +168,7 @@ for imageTag in ${list}; do
   if [[ ${imageTag} == v* ]]; then
     echodual "Processing TKG compatibility image"
     actualImage=${actualImageRepository}/tkg-compatibility:${imageTag}
-    customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/tkg-compatibility
+    customImage=$TKG_CUSTOM_IMAGE_REPOSITORY/tkg-compatibility~${imageTag} #CHANGED!! Add tag to filename
     imgpkg_copy "-i" $actualImage $customImage
     echo ""
     echodual "Finished processing TKG compatibility image"

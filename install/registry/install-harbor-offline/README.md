@@ -1,4 +1,4 @@
-# Follow docs
+# Harbor offline install
 ## Prep
 On RHEL run `sudo visudo` and update `secure_path` to be
 `Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin` </br>

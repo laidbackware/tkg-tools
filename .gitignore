@@ -1,5 +1,5 @@
 # Tanzu
-download-images*
+image-list
 *.tar.gz
 .envrc
 
