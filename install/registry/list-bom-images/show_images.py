@@ -4,7 +4,7 @@ from glob import glob
 from pprint import pprint
 from pathlib import Path
 
-bom_path = f"{str(Path.home())}/.tanzu/tkg/bom/tk*-bom*"
+bom_path = f"{str(Path.home())}/.config/tanzu/tkg/bom/tk*-bom*"
 boms = glob(bom_path)
 
 if len(boms) == 0:

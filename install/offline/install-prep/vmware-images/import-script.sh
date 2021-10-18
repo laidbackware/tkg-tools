@@ -34,15 +34,18 @@ for file_type in $file_types; do
   for file_path in $IMAGE_LOCATION/$file_type/*; do
     filename=$(basename -- "$file_path")
     echo -e "$filename\n"
-    image_name=${filename/"harbor.fqdn]harbor-project]"/"$TKG_CUSTOM_IMAGE_REPOSITORY/"}
+    image_name=$(basename -- "$file_path" | sed 's/~.*//')
+    image_name=${image_name/"harbor.fqdn]harbor-project]"/"$TKG_CUSTOM_IMAGE_REPOSITORY/"}
     image_name=${image_name/"~"/":"}
     image_name=${image_name//"]"/"/"}
     image_name=${image_name/".tar"/""}
     push_flag="-i"
-    # if [ $file_type == "bundles" ]; then
-    #   push_flag="-b"
-    # fi
+    if [ $file_type == "bundles" ]; then
+      push_flag="-b"
+    fi
     echo -e "$image_name \n"
-    imgpkg push $push_flag $image_name -f $file_path
+    # echo "imgpkg copy $push_flag $image_name --tar $file_path"
+    # imgpkg copy $push_flag $image_name --tar $file_path
+    imgpkg copy --tar $file_path --to-repo $image_name 
   done
 done

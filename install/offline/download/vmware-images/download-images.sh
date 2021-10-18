@@ -3,14 +3,21 @@
 set -euo pipefail
 
 
-commands="$(cat image-list |grep imgpkg |sort |uniq)"
+DOWNLOAD_DIR=${DOWNLOAD_DIR:-} 
+if [ -z "$DOWNLOAD_DIR" ]; then
+  echo "DOWNLOAD_DIR variable is required but is not defined" >&2
+  exit 1
+fi
+if !-f ${DOWNLOAD_DIR}/image-list; then
+  echo "Image file does ${DOWNLOAD_DIR}/image-list does not exist!"
+fi
 
-# echo "Starting download of $(echo \"$commands\" |wc -l) images/bundles"
+commands="$(cat ${DOWNLOAD_DIR}/image-list |grep imgpkg |sort |uniq)"
 
 while IFS= read -r cmd; do
-  echo "running $cmd"
+  echo -e "\nrunning $cmd\n"
   until $cmd; do
-    echo "Download failed. Retrying...."
+    echo -e "\nDownload failed. Retrying....\n"
     sleep 1
   done
 done <<< "$commands"

@@ -6,6 +6,7 @@ Ensure to export all env vars.
 export TKG_CUSTOM_IMAGE_REPOSITORY="harbor.offline.lab/tanzu"
 export TKG_IMAGE_REPO="projects.registry.vmware.com/tkg"
 export IMAGE_OUTPUT_DIR="/tmp/tkg-images"
+export DOWNLOAD_DIR=$HOME/tanzu/download
 ```
 Ensure imgpkg and yq are installed and executable. Both were downloaded in step 1.
 
@@ -23,7 +24,7 @@ export DEFINED_TKRS="v1.21.2_vmware.1-tkg.1"
 
 ## Run generate script
 ```
-./gen-download-script.sh > image-list
+./gen-download-script.sh > ${DOWNLOAD_DIR:?}/image-list
 # Filter out all duplicates and comments
 ```
 ## Run script
@@ -35,24 +36,11 @@ The images are collected alphabetically, followed by the bundles.
 
 ## Compress and validate the exported images to a single file
 ```
-tar -C $IMAGE_OUTPUT_DIR -cf vmware-images.tar .
+tar -C $IMAGE_OUTPUT_DIR -cf ${DOWNLOAD_DIR:?}/vmware-images.tar .
 ```
 Now generate a checksum and record the output for use on the import process.
 ```
-md5sum vmware-images.tar.gz
-# e.g output af503ac4e5453c1f841b11e278fba85f  vmware-images.tar.gz
+md5sum ${DOWNLOAD_DIR:?}/vmware-images.tar.gz
+# e.g output af503ac4e5453c1f841b11e278fba85f  ${DOWNLOAD_DIR:?}/vmware-images.tar.gz
 ```
-
-## Transfer images, validate and decompress
-Validate checksum matches the source file
-```
-md5sum vmware-images.tar.gz
-```
-Extract the images.
-```
-export IMAGE_LOCATION=/tanzu/vmware-images
-tar xvf vmware-images.tar.gz -C $IMAGE_LOCATION
-```
-
-## Run the import script to import all images and bundles
-Ensure IMAGE_LOCATION and TKG_CUSTOM_IMAGE_REPOSITORY is exported.</br>
+Tidy up `rm ${DOWNLOAD_DIR:?}/image-list`
