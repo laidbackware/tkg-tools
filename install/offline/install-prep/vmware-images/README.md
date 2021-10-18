@@ -1,4 +1,4 @@
-# Fetch all images
+# Import all images
 
 ## Preparation
 Ensure to export all env vars and create directories.
