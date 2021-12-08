@@ -21,3 +21,6 @@ grep -R -i stderr /var/log/pods/*
 grep -R -i error /var/log/pods/*
 grep -R -i fail /var/log/pods/*
 ```
+
+# Kapp
+Pause a package from being remediated with `kubectl patch packageinstall/antrea -n tkg-system -p '{"spec":{"paused":true}}' --type=merge`
