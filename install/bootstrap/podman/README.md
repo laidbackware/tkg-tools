@@ -32,7 +32,7 @@ export KIND_EXPERIMENTAL_PROVIDER=podman
 ```
 Now Kind commands will work as expected via Podman
 ```
-kind cluster create
+kind create cluster
 ```
 ### Validate the cluster
 Assuming the default cluster name, set the context.
