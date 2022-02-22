@@ -4,7 +4,7 @@ Run `export KUBECONFIG=/etc/kubernetes/admin.conf` on control-plane to connect t
 
 # Bootstrap troubleshooting
 ## Pre management move
-cd to /
+...
 ## Post management move
 SSH onto the CP node and `sudo -i`. </br>
 Check containers with:
@@ -15,11 +15,30 @@ Check if the api server is available.
 ```
 kubectl get pod -A
 ```
+
 Check logs on all the nodes with:
 ```
 grep -R -i stderr /var/log/pods/*
 grep -R -i error /var/log/pods/*
 grep -R -i fail /var/log/pods/*
+```
+
+Check the state of services
+```
+systemctl --type service
+```
+
+Check Kubelet
+```
+systemctl status kubelet  --no-pager --full
+journalctl -xeu kubelet
+less /var/log/cloud-init-output.log
+```
+
+Check API service
+```
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl get po -A
 ```
 
 # Kapp

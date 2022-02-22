@@ -45,6 +45,11 @@ kubectl get pods -A
 ```
 
 ## Bootstrapping TKG
+For the boot strapping to work with a private registry either the CA cert needs to be passed in, or Kind should be set to skip TLS verification. After the cluster is running, you must copy in your cert, update the ca store and restart containerd.
+```
+podman cp /home/matt/.local/share/mkcert/rootCA.pem "kind-control-plane:/usr/local/share/ca-certificates/ca.crt"podman exec kind-control-plane update-ca-certificates
+podman exec kind-control-plane systemctl restart containerd
+```
 Now when running the bootstrap commands they can be appended with `--use-existing-bootstrap-cluster` to use the kind cluster which is the current context. </br>
 Official docs [here](https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.4/vmware-tanzu-kubernetes-grid-14/GUID-troubleshooting-tkg-use-existing.html).
 Note that the kubectl context must be the kind cluster.
