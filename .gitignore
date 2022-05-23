@@ -1,5 +1,6 @@
 # Tanzu
 image-list
+download-wrapper/
 *.tar.gz
 .envrc
 

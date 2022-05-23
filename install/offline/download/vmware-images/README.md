@@ -1,6 +1,10 @@
 # Fetch all images
 
 ## Preparation
+Login to VMware registry. VMware employees should use the NT login (not email address).
+```
+docker login projects.registry.vmware.com
+```
 Ensure to export all env vars.
 ```
 export TKG_CUSTOM_IMAGE_REPOSITORY="harbor.offline.lab/tanzu"
@@ -16,6 +20,9 @@ latest_release=$(imgpkg  tag  list -i ${TKG_IMAGE_REPO}/tkr-compatibility |sort 
 imgpkg pull -i ${TKG_IMAGE_REPO}/tkr-compatibility:${latest_release} --output "tkr-tmp";
 cat tkr-tmp/tkr-compatibility.yaml | sed 's/+_//' |sed 's/+/_/' | yq e - ;
 rm -rf tkr-tmp;
+
+imgpkg pull -i ${TKG_IMAGE_REPO}/tkr-compatibility:v$(imgpkg  tag  list -i ${TKG_IMAGE_REPO}/tkr-compatibility |sed 's/v//' |sort -rn |head -1) --output "tkr-tmp"; cat tkr-tmp/tkr-compatibility.yaml | sed 's/+_//' |sed 's/+/_/' | yq e - ; rm -rf tkr-tmp;
+
 # This will display the tkrs by tkg version
 # Example variable defining release. Note they must be space separated.
 export DEFINED_TKRS="v1.19.12_vmware.1-tkg.1 v1.20.8_vmware.1-tkg.2 v1.21.2_vmware.1-tkg.1"

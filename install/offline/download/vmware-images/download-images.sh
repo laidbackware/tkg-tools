@@ -12,7 +12,7 @@ if !-f ${DOWNLOAD_DIR}/image-list; then
   echo "Image file does ${DOWNLOAD_DIR}/image-list does not exist!"
 fi
 
-commands="$(cat ${DOWNLOAD_DIR}/image-list |grep imgpkg |sort |uniq)"
+commands="$(cat ${DOWNLOAD_DIR}/generated-image-list |grep imgpkg |sort |uniq)"
 
 while IFS= read -r cmd; do
   echo -e "\nrunning $cmd\n"
