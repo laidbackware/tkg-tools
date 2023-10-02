@@ -30,9 +30,12 @@ systemctl --type service
 
 Check Kubelet
 ```
+less /var/log/cloud-init-output.log
+journalctl -xeu  cloud-final
+
 systemctl status kubelet  --no-pager --full
 journalctl -xeu kubelet
-less /var/log/cloud-init-output.log
+crictl images ls
 ```
 
 Check API service
