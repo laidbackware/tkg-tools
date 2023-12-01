@@ -32,9 +32,12 @@ Check Kubelet
 ```
 less /var/log/cloud-init-output.log
 journalctl -xeu  cloud-final
+journalctl -xeu  cloud-init
+journalctl -xeu  cloud-config
+journalctl -xeu  cloud-init-local
 
 systemctl status kubelet  --no-pager --full
-journalctl -xeu kubelet
+journalctl -xeun kubelet
 crictl images ls
 ```
 
